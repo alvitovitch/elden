@@ -1,25 +1,31 @@
+import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Armor from './components/armor';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [data, setData] = useState(null)
+    const [page, setPage] = useState(0)
+    async function handleClick(e) {
+        e.preventDefault()
+
+            fetch(`https://eldenring.fanapis.com/api/${e.target.id}s?limit=20&page=${page}`)
+            .then(response => response.json())
+            .then(res => {
+                setData(res.data)})
+    }
+    return (
+        <div>
+            <div>
+                <button id='armor' onClick={e => handleClick(e)}>Armor</button>
+                <button id='weapon' onClick={e => handleClick(e)}>Weapons</button>
+                <button id='item' onClick={e => handleClick(e)}>Items</button>
+                <button id='creature' onClick={e => handleClick(e)}>Creatures</button>
+            </div>
+          { data === null ? null : data.map((i) => (<Armor armor={i}/>)) }
+        </div>
+    );
 }
 
 export default App;
